@@ -25,9 +25,11 @@ db = SQLAlchemy(app)
 import services
 import orm
 
-@app.before_request
-def create_tables():
-    db.create_all()
+# @app.before_request
+# def create_tables():
+#     db.create_all()
+
+db.create_all()
 
 api.add_resource(services.Allusers, '/users')
 api.add_resource(services.UserRegistration, '/regs')
