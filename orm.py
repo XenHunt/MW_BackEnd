@@ -13,7 +13,9 @@ class UserModel(db.Model):
     password = db.Column(db.String(120), nullable=True)
     role = db.Column(db.String(120), nullable=True)
 
-    def __init__(self, firstname, lastname, username, password, role):
+    def __init__(
+        self, firstname: str, lastname: str, username: str, password: str, role: str
+    ):
         self.firstname = firstname
         self.lastname = lastname
         self.username = username
@@ -25,7 +27,7 @@ class UserModel(db.Model):
         db.session.commit()
 
     @classmethod
-    def find_by_username(cls, username):
+    def find_by_username(cls, username: str):
         return cls.query.filter_by(username=username).first()
 
     @classmethod
@@ -39,22 +41,23 @@ class UserModel(db.Model):
         return {"users": list(map(lambda x: to_json(x), UserModel.query.all()))}
 
     @staticmethod
-    def generate_hash(password):
+    def generate_hash(password: str):
         return sha256.hash(password)
 
     @staticmethod
-    def verify_hash(password, hash):
+    def verify_hash(password: str, hash: str):
         return sha256.verify(password, hash)
 
+
 class RevokedTokenModel(db.Model):
-    __tablename__ = 'bad_tokens'
+    __tablename__ = "bad_tokens"
     id = db.Column(db.Integer, primary_key=True)
     jwt = db.Column(db.String(120))
-    
+
     def add(self):
         db.session.add(self)
         db.session.commit()
-        
+
     @classmethod
     def is_jwt_in_blacklisted(cls, jwt):
         qr = db.session.query(jti=jwt).first()
